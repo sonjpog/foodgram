@@ -1,6 +1,6 @@
 from django.db import models
 
-from foodgram.constants import MAX_TAG_LENGTH
+from foodgram.constants import MAX_TAG_LENGTH, MAX_COLOR_LENGHT
 
 
 class Tag(models.Model):
