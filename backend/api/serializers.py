@@ -71,7 +71,7 @@ class CustomUserSerializer(UserSerializer):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return request.user.follower.filter(author=obj).exists()
+        return request.user.subscriptions.filter(subscribed_user=obj).exists()
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
