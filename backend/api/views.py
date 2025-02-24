@@ -209,27 +209,35 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, pk=pk)
 
         if request.method == 'POST':
-            if Favorite.objects.filter(recipe=recipe, user=user).exists():
+            if Favorite.objects.filter(recipe=recipe,
+                                       user=user).exists():
                 return Response(
                     {
-                        'detail': (f'Рецепт "{recipe.name}" уже добавлен в избранное')
+                        'detail': (f'Рецепт "{recipe.name}" уже добавлен'
+                                   f'в избранное')
                     },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            favorite = Favorite.objects.create(recipe=recipe, user=user)
             serializer = FavoriteSerializer(
-                favorite, context={'request': request})
+                data={
+                    'recipe': recipe,
+                    'user': user
+                }
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save(recipe=recipe, user=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        elif request.method == 'DELETE':
-            deleted_objects_number, _ = Favorite.objects.filter(
-                recipe=recipe, user=user).delete()
+        elif self.request.method == 'DELETE':
+            deleted_objects_number, _ = (
+                Favorite.objects.filter(recipe=recipe, user=user).delete()
+            )
             if deleted_objects_number:
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
             return Response(
-                {'detail': 'Такого рецепта нет в избранных!'},
+                {'detail': 'Такого рецепта нет в избранных !'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
