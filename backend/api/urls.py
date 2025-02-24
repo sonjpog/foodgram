@@ -3,7 +3,7 @@ from api.views import (
     IngredientViewSet,
     RecipeViewSet,
     TagViewSet,
-    UserViewSet,
+    CustomUserViewSet,
 )
 
 from django.contrib import admin
@@ -23,7 +23,7 @@ router = RuDefaultRouter()
 router.register("tags", TagViewSet, "tags")
 router.register("ingredients", IngredientViewSet, "ingredients")
 router.register("recipes", RecipeViewSet, "recipes")
-router.register("users", UserViewSet, "users")
+router.register("users", CustomUserViewSet, "users")
 
 urlpatterns = (
     path("", include(router.urls)),
