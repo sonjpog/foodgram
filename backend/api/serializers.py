@@ -274,7 +274,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 class RecipeReadSerializer(serializers.ModelSerializer):
     author = CustomUserSerializer()
     ingredients = RecipeIngredientReadSerializer(
-        source='ingredient_list',
+        source='recipe_ingredients',
         many=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
