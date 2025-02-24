@@ -28,7 +28,6 @@ from users.models import Subscription
 User = get_user_model()
 
 
-
 class BaseAPIRootView(APIRootView):
     """Базовые пути API приложения."""
 
@@ -42,9 +41,13 @@ def short_url(request, pk):
 
 class CustomUserViewSet(UserViewSet):
     pagination_class = CustomLimitPagination
-    permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
+
+    def get_permissions(self):
+        if self.action == 'me':
+            return [IsAuthenticated]
+        return super().get_permissions()
 
     @action(
         methods=['PUT', 'DELETE'],
@@ -66,15 +69,6 @@ class CustomUserViewSet(UserViewSet):
             user = self.request.user
             user.avatar.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-
-    @action(
-        methods=['GET'],
-        detail=False,
-        permission_classes=[IsAuthenticated]
-    )
-    def me(self, request, *args, **kwargs):
-        self.get_object = self.get_instance
-        return self.retrieve(request, *args, **kwargs)
 
     @action(
         detail=True,
