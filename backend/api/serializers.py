@@ -93,7 +93,7 @@ class FollowCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subscription
-        fields = ('author', 'user')
+        fields = ('subscribed_user', 'user')
 
 
 class FollowReadSerializer(serializers.ModelSerializer):
@@ -124,7 +124,7 @@ class FollowReadSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
-        return Subscription.objects.filter(author=obj, user=user).exists()
+        return Subscription.objects.filter(subscribed_user=obj, user=user).exists()
 
     def get_recipes(self, obj):
         request = self.context.get('request')
@@ -164,6 +164,7 @@ class RecipeIngredientReadSerializer(serializers.ModelSerializer):
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit'
     )
+    amount = serializers.ReadOnlyField()
 
     class Meta:
         model = RecipeIngredient
@@ -274,7 +275,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 class RecipeReadSerializer(serializers.ModelSerializer):
     author = CustomUserSerializer()
     ingredients = RecipeIngredientReadSerializer(
-        source='ingredient_list',
+        source='recipe_ingredients',
         many=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()

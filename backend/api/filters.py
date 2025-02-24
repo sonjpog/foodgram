@@ -1,4 +1,5 @@
 from django_filters.rest_framework import FilterSet, filters
+from rest_framework.exceptions import ValidationError
 
 from ingredients.models import Ingredient
 from recipes.models import Recipe
@@ -22,30 +23,22 @@ class RecipeFilter(FilterSet):
         queryset=Tag.objects.all(),
         label='Tags'
     )
-    is_favorited = filters.BooleanFilter(method='filter_is_favorited')
+    is_favorited = filters.BooleanFilter(method='boolean_filter',
+                                         field_name='favorited_by')
     is_in_shopping_cart = filters.BooleanFilter(
-        method='filter_is_in_shopping_cart')
+        method='boolean_filter',
+        field_name='in_shopping_cart')
 
     class Meta:
         model = Recipe
         fields = ('tags', 'author', 'is_favorited', 'is_in_shopping_cart')
 
-    def filter_is_favorited(self, queryset, name, value):
-        user = (
-            self.request.user
-            if self.request.user.is_authenticated
-            else None
-        )
-        if value and user:
-            return queryset.filter(favorite__user_id=user.id)
-        return queryset
+    def boolean_filter(self, queryset, name, value):
+        if self.request.user.is_anonymous:
+            raise ValidationError('Чтобы посмотреть избранное, нужено зарегистрироваться!')
+        if value:
+            return queryset.filter(**{f'{name}__user': self.request.user})
 
-    def filter_is_in_shopping_cart(self, queryset, name, value):
-        user = (
-            self.request.user
-            if self.request.user.is_authenticated
-            else None
-        )
-        if value and user:
-            return queryset.filter(shopping_list__user_id=user.id)
-        return queryset
+        else:
+            return queryset.exclude(**{f'{name}__user': self.request.user})
+

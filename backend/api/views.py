@@ -46,7 +46,7 @@ class CustomUserViewSet(UserViewSet):
 
     def get_permissions(self):
         if self.action == 'me':
-            return [IsAuthenticated]
+            return [IsAuthenticated(),]
         return super().get_permissions()
 
     @action(
@@ -77,8 +77,8 @@ class CustomUserViewSet(UserViewSet):
     )
     def subscribe(self, request, id):
         user = request.user
-        author = get_object_or_404(User, id=id)
-        if user == author:
+        subscribed_user = get_object_or_404(User, id=id)
+        if user == subscribed_user:
             return Response(
                 {'errors': ('Вы не можете подписаться на '
                             '(отписаться от) себя !')},
@@ -86,7 +86,7 @@ class CustomUserViewSet(UserViewSet):
             )
 
         if request.method == 'POST':
-            if Subscription.objects.filter(user=user, author=author).exists():
+            if Subscription.objects.filter(user=user, subscribed_user=subscribed_user).exists():
                 return Response(
                     {'errors': 'Вы уже подписаны на данного пользователя !'},
                     status=status.HTTP_400_BAD_REQUEST,
@@ -94,7 +94,7 @@ class CustomUserViewSet(UserViewSet):
             serializer = FollowCreateSerializer(
                 context={'request': request},
                 data={
-                    'author': author.id,
+                    'subscribed_user': subscribed_user.id,
                     'user': user.id
                 }
             )
@@ -111,7 +111,7 @@ class CustomUserViewSet(UserViewSet):
 
         elif self.request.method == 'DELETE':
             deleted_objects_number, _ = (
-                Subscription.objects.filter(user=user, author=author).delete()
+                Subscription.objects.filter(user=user, subscribed_user=subscribed_user).delete()
             )
             if deleted_objects_number:
                 return Response(status=status.HTTP_204_NO_CONTENT)
@@ -130,7 +130,7 @@ class CustomUserViewSet(UserViewSet):
     )
     def get_subscriptions(self, request):
         user = request.user
-        queryset = User.objects.filter(follower__user=user).annotate(
+        queryset = User.objects.filter(subscriptions__user=user).annotate(
             recipes_count=Count('recipes')
         )
         pages = self.paginate_queryset(queryset)
