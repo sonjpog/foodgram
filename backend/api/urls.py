@@ -4,6 +4,7 @@ from api.views import (
     RecipeViewSet,
     TagViewSet,
     CustomUserViewSet,
+    short_url
 )
 
 from django.contrib import admin
@@ -29,4 +30,5 @@ urlpatterns = (
     path("", include(router.urls)),
     path('admin/', admin.site.urls),
     path("auth/", include("djoser.urls.authtoken")),
+    path('recipes/<int:pk>/short-url/', short_url, name='short_url'),
 )
