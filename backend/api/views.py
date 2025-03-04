@@ -193,9 +193,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_name='get-link',
     )
     def get_link(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, pk=pk)
-        short_link = reverse('api:short_url', args=[recipe.pk])
-        return Response({'short-link': request.build_absolute_uri(short_link)},
+        #recipe = get_object_or_404(Recipe, pk=pk)
+        #short_link = reverse('api:short_url', args=[recipe.pk])
+        short_link = self.request.build_absolute_uri()
+        short_link = short_link.split('/')
+        short_link.pop(-2)
+        short_link.pop(-4)
+        short_link = str.join('/', short_link)
+        return Response({'short-link': short_link},
                         status=status.HTTP_200_OK)
 
     @action(
