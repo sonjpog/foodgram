@@ -12,6 +12,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
+
   backend:
     image: sonjpog/foodgram_backend:latest
     restart: always
@@ -22,20 +23,22 @@ services:
       - db
     env_file:
       - ./.env
+
   frontend:
     image: sonjpog/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
       - backend
+
   nginx:
     image: nginx:1.19.6
     ports:
-      - 80:80
+      - 8080:80
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
-      - /docs/:/usr/share/nginx/html/api/docs/
+      - ../docs/:/usr/share/nginx/html/api/docs/
       - static_value:/var/html/static_backend/
       - media_value:/var/html/media/
     restart: always
