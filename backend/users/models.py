@@ -35,7 +35,7 @@ class User(AbstractUser):
         'Аватар',
         upload_to='avatars/',
         blank=True,
-        null=True
+        null=False
     )
 
     class Meta:
@@ -55,7 +55,7 @@ class User(AbstractUser):
         except ValueError:
             pass
         else:
-            email = email_name.lower() + '@' + domain_part.lower()
+            email = '{}@{}'.format(email_name.lower(), domain_part.lower())
         return email
 
 

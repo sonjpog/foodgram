@@ -8,10 +8,11 @@ from recipes.models import Favorite, Recipe, RecipeIngredient, ShoppingCart
 from rest_framework import serializers
 from tags.models import Tag
 from users.models import Subscription
-from .validators import (validate_not_self_subscription,
-                         validate_already_subscribed)
 
 from foodgram.constants import MAX_PASSWORD_LENGTH, PAGE_SIZE
+
+from .validators import (validate_already_subscribed,
+                         validate_not_self_subscription)
 
 User = get_user_model()
 

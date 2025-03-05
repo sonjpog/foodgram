@@ -27,6 +27,3 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_display = ('user', 'subscribed_user')
     list_filter = ('user',)
     search_fields = ('user__email', 'subscribed_user__email')
-
-    def __str__(self):
-        return f'{self.user.email} подписан на {self.subscribed_user.email}'
