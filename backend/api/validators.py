@@ -1,6 +1,5 @@
 from rest_framework.exceptions import ValidationError
-
-from .models import Subscription
+from users.models import Subscription
 
 
 def validate_not_self_subscription(user, subscribed_user):
