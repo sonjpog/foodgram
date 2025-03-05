@@ -4,13 +4,13 @@ from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from rest_framework import serializers
-
-from foodgram.constants import MAX_PASSWORD_LENGTH, PAGE_SIZE
 from ingredients.models import Ingredient
 from recipes.models import Favorite, Recipe, RecipeIngredient, ShoppingCart
+from rest_framework import serializers
 from tags.models import Tag
 from users.models import Subscription
+
+from foodgram.constants import MAX_PASSWORD_LENGTH, PAGE_SIZE
 
 User = get_user_model()
 
