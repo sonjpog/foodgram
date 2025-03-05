@@ -1,5 +1,4 @@
 from django_filters.rest_framework import FilterSet, filters
-from rest_framework.exceptions import ValidationError
 
 from ingredients.models import Ingredient
 from recipes.models import Recipe
@@ -44,4 +43,3 @@ class RecipeFilter(FilterSet):
 
         else:
             return queryset.exclude(**{f'{name}__user': self.request.user})
-
