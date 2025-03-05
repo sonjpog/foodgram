@@ -8,6 +8,8 @@ from recipes.models import Favorite, Recipe, RecipeIngredient, ShoppingCart
 from rest_framework import serializers
 from tags.models import Tag
 from users.models import Subscription
+from .validators import (validate_not_self_subscription,
+                         validate_already_subscribed)
 
 from foodgram.constants import MAX_PASSWORD_LENGTH, PAGE_SIZE
 
@@ -93,6 +95,15 @@ class FollowCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
         fields = ('subscribed_user', 'user')
+
+    def validate(self, data):
+        user = self.context.get('request').user
+        subscribed_user = data.get('subscribed_user')
+
+        validate_not_self_subscription(user, subscribed_user)
+        validate_already_subscribed(user, subscribed_user)
+
+        return data
 
 
 class FollowReadSerializer(serializers.ModelSerializer):

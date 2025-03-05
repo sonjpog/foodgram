@@ -73,35 +73,22 @@ class CustomUserViewSet(UserViewSet):
     def subscribe(self, request, id):
         user = request.user
         subscribed_user = get_object_or_404(User, id=id)
-        if user == subscribed_user:
-            return Response(
-                {
-                    'errors': (
-                        'Вы не можете подписаться на ' '(отписаться от) себя !'
-                    )
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
         if request.method == 'POST':
-            if Subscription.objects.filter(
-                user=user, subscribed_user=subscribed_user
-            ).exists():
-                return Response(
-                    {'errors': 'Вы уже подписаны на данного пользователя !'},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
             serializer = FollowCreateSerializer(
                 context={'request': request},
                 data={'subscribed_user': subscribed_user.id, 'user': user.id},
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
+
             author_annotated = self.get_queryset().filter(id=id).first()
-            serializer = FollowReadSerializer(
-                author_annotated, context={'request': request}
+            follow_data = FollowReadSerializer(
+                author_annotated,
+                context={'request': request}
             )
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            return Response(follow_data.data, status=status.HTTP_201_CREATED)
 
         elif self.request.method == 'DELETE':
             deleted_objects_number, _ = Subscription.objects.filter(
