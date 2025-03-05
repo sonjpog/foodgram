@@ -2,7 +2,6 @@ import base64
 
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
-from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from ingredients.models import Ingredient
 from recipes.models import Favorite, Recipe, RecipeIngredient, ShoppingCart
@@ -207,10 +206,11 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         result = []
         for ingredient_data in ingredients:
             ingredient_id = ingredient_data['id']
-            ingredient = get_object_or_404(Ingredient, pk=ingredient_id)
             amount = ingredient_data['amount']
             recipe_ingredient = RecipeIngredient(
-                ingredient=ingredient, recipe=recipe, amount=amount
+                ingredient_id=ingredient_id,
+                recipe=recipe,
+                amount=amount
             )
             result.append(recipe_ingredient)
         RecipeIngredient.objects.bulk_create(result)
