@@ -34,11 +34,8 @@ class RecipeFilter(FilterSet):
     def boolean_filter(self, queryset, name, value):
         if self.request.user.is_anonymous:
             return queryset
-            # raise ValidationError('Чтобы посмотреть избранное, нужно
-            # зарегистрироваться!') — изначально сделала так, но
-            # не проходят тесты постмана
+
         if value:
             return queryset.filter(**{f'{name}__user': self.request.user})
 
-        else:
-            return queryset.exclude(**{f'{name}__user': self.request.user})
+        return queryset.exclude(**{f'{name}__user': self.request.user})

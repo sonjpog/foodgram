@@ -40,7 +40,7 @@ def short_url(request, pk):
 
 class CustomUserViewSet(UserViewSet):
     pagination_class = CustomLimitPagination
-    queryset = User.objects.all()
+    queryset = User.objects.annotate(recipes_count=Count("recipes"))
     serializer_class = CustomUserSerializer
 
     def get_permissions(self):
@@ -103,10 +103,7 @@ class CustomUserViewSet(UserViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            users_annotated = User.objects.annotate(
-                recipes_count=Count("recipes")
-            )
-            author_annotated = users_annotated.filter(id=id).first()
+            author_annotated = self.get_queryset().filter(id=id).first()
             serializer = FollowReadSerializer(
                 author_annotated, context={"request": request}
             )

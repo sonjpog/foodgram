@@ -99,7 +99,7 @@ class FollowCreateSerializer(serializers.ModelSerializer):
 class FollowReadSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.IntegerField()
+    recipes_count = serializers.IntegerField(default=0)
 
     class Meta:
         model = User
@@ -161,21 +161,11 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientReadSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField(source='ingredient.id')
-    name = serializers.ReadOnlyField(source='ingredient.name')
-    measurement_unit = serializers.ReadOnlyField(
-        source='ingredient.measurement_unit'
-    )
-    amount = serializers.ReadOnlyField()
+    ingredient = IngredientSerializer(read_only=True)
 
     class Meta:
         model = RecipeIngredient
-        fields = (
-            'amount',
-            'id',
-            'measurement_unit',
-            'name'
-        )
+        fields = ('ingredient', 'amount')
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
