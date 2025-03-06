@@ -34,7 +34,7 @@ def short_url(request, pk):
 
 class CustomUserViewSet(UserViewSet):
     pagination_class = CustomLimitPagination
-    queryset = User.objects.annotate(recipes_count=Count('recipes'))
+    queryset = User.objects.all()
     serializer_class = CustomUserSerializer
 
     def get_permissions(self):
@@ -75,31 +75,43 @@ class CustomUserViewSet(UserViewSet):
         subscribed_user = get_object_or_404(User, id=id)
 
         if request.method == 'POST':
+            subscribed_user = get_object_or_404(User, id=id)
             serializer = FollowCreateSerializer(
                 context={'request': request},
-                data={'subscribed_user': subscribed_user.id, 'user': user.id},
+                data={
+                    'subscribed_user': subscribed_user.id,
+                    'user': user.id
+                }
             )
+
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
-            author_annotated = self.get_queryset().filter(id=id).first()
-            follow_data = FollowReadSerializer(
+            users_annotated = User.objects.annotate(
+                recipes_count=Count('recipes'))
+
+            author_annotated = users_annotated.filter(id=id).first()
+            serializer = FollowReadSerializer(
                 author_annotated,
                 context={'request': request}
             )
 
-            return Response(follow_data.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         elif self.request.method == 'DELETE':
-            deleted_objects_number, _ = Subscription.objects.filter(
-                user=user, subscribed_user=subscribed_user
-            ).delete()
+
+            deleted_objects_number, _ = (
+                Subscription.objects.filter(
+                    user=user, subscribed_user=subscribed_user).delete()
+            )
+
             if deleted_objects_number:
+
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
             return Response(
                 {'detail': 'Вы не подписаны на данного пользователя !'},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST
             )
 
     @action(

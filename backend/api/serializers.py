@@ -6,13 +6,12 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from ingredients.models import Ingredient
 from recipes.models import Favorite, Recipe, RecipeIngredient, ShoppingCart
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from tags.models import Tag
 from users.models import Subscription
 
 from foodgram.constants import MAX_PASSWORD_LENGTH, PAGE_SIZE
 
-from .validators import (validate_already_subscribed,
-                         validate_not_self_subscription)
 
 User = get_user_model()
 
@@ -101,8 +100,19 @@ class FollowCreateSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         subscribed_user = data.get('subscribed_user')
 
-        validate_not_self_subscription(user, subscribed_user)
-        validate_already_subscribed(user, subscribed_user)
+        if user == subscribed_user:
+
+            raise ValidationError(
+                'Вы не можете подписаться на отписаться от себя !'
+            )
+
+            if Subscription.objects.filter(
+                user=user, subscribed_user=subscribed_user
+            ).exists():
+
+                raise ValidationError(
+                    'Вы уже подписаны на данного пользователя !'
+                )
 
         return data
 
@@ -164,11 +174,20 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
+    id = serializers.ReadOnlyField(source='ingredient.id')
+    name = serializers.ReadOnlyField(source='ingredient.name')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit'
+    )
 
     class Meta:
         model = RecipeIngredient
-        fields = ('id', 'amount')
+        fields = (
+            'amount',
+            'id',
+            'measurement_unit',
+            'name'
+        )
 
 
 class RecipeIngredientReadSerializer(serializers.ModelSerializer):
