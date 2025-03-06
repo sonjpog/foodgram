@@ -181,6 +181,8 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientReadSerializer(serializers.ModelSerializer):
+    # тут я оставляю поля с определением, к какой модели прикрепиться,
+    # чтобы не произошло путаницы из-за связанной модели и был корректный вывод
     id = serializers.ReadOnlyField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
