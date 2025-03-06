@@ -12,7 +12,6 @@ from users.models import Subscription
 
 from foodgram.constants import MAX_PASSWORD_LENGTH, PAGE_SIZE
 
-
 User = get_user_model()
 
 
