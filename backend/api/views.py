@@ -1,18 +1,11 @@
 from api.filters import IngredientFilter, RecipeFilter
 from api.pagination import CustomLimitPagination
 from api.permissions import IsAdminOrAuthorOrReadOnly
-from api.serializers import (
-    AvatarSerializer,
-    CustomUserSerializer,
-    FavoriteSerializer,
-    FollowCreateSerializer,
-    FollowReadSerializer,
-    IngredientSerializer,
-    RecipeCreateSerializer,
-    RecipeReadSerializer,
-    ShoppingCartSerializer,
-    TagSerializer,
-)
+from api.serializers import (AvatarSerializer, CustomUserSerializer,
+                             FavoriteSerializer, FollowCreateSerializer,
+                             FollowReadSerializer, IngredientSerializer,
+                             RecipeCreateSerializer, RecipeReadSerializer,
+                             ShoppingCartSerializer, TagSerializer)
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Sum
 from django.http import HttpResponse
