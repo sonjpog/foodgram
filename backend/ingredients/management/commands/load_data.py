@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from django.core.management.base import BaseCommand
+
 from ingredients.models import Ingredient
 from tags.models import Tag
 
