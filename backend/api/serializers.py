@@ -1,8 +1,8 @@
 import base64
 
-from django.db.models import F
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
+from django.db.models import F
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from ingredients.models import Ingredient
 from recipes.models import Favorite, Recipe, RecipeIngredient, ShoppingCart
