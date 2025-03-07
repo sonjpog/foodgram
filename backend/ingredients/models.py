@@ -1,7 +1,6 @@
 from django.db import models
 
-from foodgram.constants import (MAX_INGREDIENT_NAME_LENGTH,
-                                MAX_MEASUREMENT_LENGTH)
+from foodgram.constants import MAX_INGREDIENT_NAME_LENGTH, MAX_MEASUREMENT_LENGTH
 
 
 class Ingredient(models.Model):
