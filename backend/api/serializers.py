@@ -1,5 +1,6 @@
 import base64
 
+from django.db.models import F
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
@@ -181,22 +182,13 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientReadSerializer(serializers.ModelSerializer):
-    # тут я оставляю поля с определением, к какой модели прикрепиться,
-    # чтобы не произошло путаницы из-за связанной модели и был корректный вывод
-    id = serializers.ReadOnlyField(source='ingredient.id')
-    name = serializers.ReadOnlyField(source='ingredient.name')
-    measurement_unit = serializers.ReadOnlyField(
-        source='ingredient.measurement_unit'
-    )
-    amount = serializers.ReadOnlyField()
+    ingredients = IngredientSerializer(many=True)
 
     class Meta:
         model = RecipeIngredient
         fields = (
             'amount',
-            'id',
-            'measurement_unit',
-            'name'
+            'ingredients'
         )
 
 
@@ -299,9 +291,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
 class RecipeReadSerializer(serializers.ModelSerializer):
     author = CustomUserSerializer()
-    ingredients = RecipeIngredientReadSerializer(
-        source='recipe_ingredients',
-        many=True)
+    ingredients = serializers.SerializerMethodField()
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
     tags = TagSerializer(many=True)
@@ -320,6 +310,15 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             'tags',
             'text',
         )
+
+    def get_ingredients(self, obj):
+        ingredients = obj.ingredients.values(
+            'id',
+            'name',
+            'measurement_unit',
+            amount=F('in_recipes__amount'),
+        )
+        return ingredients
 
     def check_user_status(self, obj, model_class):
         user = self.context.get('request')
