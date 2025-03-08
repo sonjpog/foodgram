@@ -7,6 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -99,10 +100,14 @@ class CustomUserViewSet(UserViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         elif self.request.method == 'DELETE':
+            try:
+                subscribed_user = User.objects.get(id=id)
+            except User.DoesNotExist:
+                raise NotFound(detail='Автор не найден!')
 
             deleted_objects_number, _ = (
                 Subscription.objects.filter(
-                    user=user, subscribed_user_id=id).delete()
+                    user=user, subscribed_user=subscribed_user).delete()
             )
 
             if deleted_objects_number:
