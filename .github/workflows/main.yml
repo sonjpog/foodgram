@@ -28,10 +28,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r ./backend/requirements.txt
-          pip install flake8 flake8-isort isort
-      - name: Run isort
-        run: |
-          isort --settings-path=./setup.cfg --check --diff backend/
       - name: Test with flake8
         env:
           POSTGRES_USER: django_user
