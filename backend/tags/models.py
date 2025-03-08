@@ -5,6 +5,7 @@ from foodgram.constants import MAX_TAG_LENGTH
 
 class Tag(models.Model):
     """Модель для хранения тегов."""
+
     name = models.CharField(
         'Название',
         max_length=MAX_TAG_LENGTH,

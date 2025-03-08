@@ -5,6 +5,7 @@ from .models import Ingredient
 
 @admin.register(Ingredient)
 class Ingredient(admin.ModelAdmin):
-    """Ингредиентты."""
+    """Ингредиенты."""
+
     list_display = ('name', 'measurement_unit')
     search_fields = ['name']

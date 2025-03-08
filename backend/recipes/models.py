@@ -2,16 +2,17 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from ingredients.models import Ingredient
-from tags.models import Tag
 
 from foodgram import constants
+from ingredients.models import Ingredient
+from tags.models import Tag
 
 User = get_user_model()
 
 
 class Recipe(models.Model):
     """Модель для хранения рецептов."""
+
     name = models.CharField(
         'Название', max_length=constants.MAX_FIELD_LENGTH
     )
@@ -69,6 +70,7 @@ class Recipe(models.Model):
 
 class RecipeIngredient(models.Model):
     """Модель количества ингредиентов в рецепте."""
+
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -110,6 +112,7 @@ class RecipeIngredient(models.Model):
 
 class ShoppingCart(models.Model):
     """Модель списка покупок пользователя."""
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -142,6 +145,7 @@ class ShoppingCart(models.Model):
 
 class Favorite(models.Model):
     """Модель избранных рецептов пользователя."""
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

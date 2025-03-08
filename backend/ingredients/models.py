@@ -6,6 +6,7 @@ from foodgram.constants import (MAX_INGREDIENT_NAME_LENGTH,
 
 class Ingredient(models.Model):
     """Модель для хранения ингредиентов."""
+
     name = models.CharField(
         'Название',
         max_length=MAX_INGREDIENT_NAME_LENGTH,

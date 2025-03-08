@@ -7,6 +7,7 @@ from .models import Subscription, User
 @admin.register(User)
 class MyUserAdmin(UserAdmin):
     """Пользовательский админ."""
+
     list_display = (
         'email',
         'first_name',
@@ -24,6 +25,7 @@ class MyUserAdmin(UserAdmin):
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
     """Подписки пользователя."""
+
     list_display = ('user', 'subscribed_user')
     list_filter = ('user',)
     search_fields = ('user__email', 'subscribed_user__email')
