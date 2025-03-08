@@ -72,7 +72,6 @@ class CustomUserViewSet(UserViewSet):
     )
     def subscribe(self, request, id):
         user = request.user
-        subscribed_user = get_object_or_404(User, id=id)
 
         if request.method == 'POST':
             subscribed_user = get_object_or_404(User, id=id)
@@ -102,7 +101,7 @@ class CustomUserViewSet(UserViewSet):
 
             deleted_objects_number, _ = (
                 Subscription.objects.filter(
-                    user=user, subscribed_user=subscribed_user).delete()
+                    user=user, subscribed_user_id=id).delete()
             )
 
             if deleted_objects_number:

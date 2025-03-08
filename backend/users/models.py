@@ -35,7 +35,6 @@ class User(AbstractUser):
         'Аватар',
         upload_to='avatars/',
         blank=True,
-        null=False
     )
 
     class Meta:
