@@ -106,13 +106,13 @@ class FollowCreateSerializer(serializers.ModelSerializer):
                 'Вы не можете подписаться на отписаться от себя !'
             )
 
-            if Subscription.objects.filter(
-                user=user, subscribed_user=subscribed_user
-            ).exists():
+        if Subscription.objects.filter(
+            user=user, subscribed_user=subscribed_user
+        ).exists():
 
-                raise ValidationError(
-                    'Вы уже подписаны на данного пользователя !'
-                )
+            raise ValidationError(
+                'Вы уже подписаны на данного пользователя !'
+            )
 
         return data
 
