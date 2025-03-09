@@ -240,9 +240,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def add_to_shopping_cart(self, request, pk):
         user = request.user
-        recipe = get_object_or_404(Recipe, pk=pk)
 
         if request.method == 'POST':
+            recipe = get_object_or_404(Recipe, pk=pk)
+
             if ShoppingCart.objects.filter(recipe=recipe, user=user).exists():
                 return Response(
                     {
@@ -253,23 +254,23 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 )
 
             serializer = ShoppingCartSerializer(
-                data={'recipe': recipe, 'user': user}
+                data={'recipe': recipe.id, 'user': user.id}
             )
             serializer.is_valid(raise_exception=True)
             serializer.save(recipe=recipe, user=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        elif self.request.method == 'DELETE':
-            deleted_objects_number, _ = ShoppingCart.objects.filter(
-                recipe=recipe, user=user
-            ).delete()
-            if deleted_objects_number:
-                return Response(status=status.HTTP_204_NO_CONTENT)
+        deleted_count, _ = ShoppingCart.objects.filter(
+            recipe_id=pk, user=user
+        ).delete()
 
-            return Response(
-                {'detail': 'Данного рецепта нет в списке покупок !'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        if deleted_count:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(
+            {'detail': 'Данного рецепта нет в списке покупок!'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     @staticmethod
     def add_shopping_list_to_txt(ingredients):
