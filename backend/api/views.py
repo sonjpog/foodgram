@@ -119,7 +119,7 @@ class CustomUserViewSet(UserViewSet):
     )
     def get_subscriptions(self, request):
         user = request.user
-        queryset = User.objects.filter(subscriptions__user=user).annotate(
+        queryset = User.objects.filter(subscribers__user=user).annotate(
             recipes_count=Count('recipes')
         )
         pages = self.paginate_queryset(queryset)
