@@ -7,7 +7,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -88,10 +87,9 @@ class CustomUserViewSet(UserViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
-            users_annotated = User.objects.annotate(
-                recipes_count=Count('recipes'))
-
-            author_annotated = users_annotated.filter(id=id).first()
+            author_annotated = User.objects.annotate(
+                recipes_count=Count('recipes')
+            ).filter(id=id).first()
             serializer = FollowReadSerializer(
                 author_annotated,
                 context={'request': request}
@@ -99,23 +97,16 @@ class CustomUserViewSet(UserViewSet):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        elif self.request.method == 'DELETE':
-            try:
-                subscribed_user = User.objects.get(id=id)
-            except User.DoesNotExist:
-                raise NotFound(detail='Автор не найден!')
+        if request.method == 'DELETE':
+            deleted_count, _ = Subscription.objects.filter(
+                user=user, subscribed_user_id=id
+            ).delete()
 
-            deleted_objects_number, _ = (
-                Subscription.objects.filter(
-                    user=user, subscribed_user=subscribed_user).delete()
-            )
-
-            if deleted_objects_number:
-
+            if deleted_count:
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
             return Response(
-                {'detail': 'Вы не подписаны на данного пользователя !'},
+                {'detail': 'Вы не подписаны на данного пользователя!'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 

@@ -2328,9 +2328,6 @@ INSERT INTO recipes_recipe VALUES(6,'Нечто съедобное (это не 
 INSERT INTO recipes_recipe VALUES(7,'Еще одна попытка приготовить еду','recipes/temp_psBAMfC.png','Вероятно стоит это смешать.',10,3);
 CREATE TABLE IF NOT EXISTS "users_user" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "password" varchar(128) NOT NULL, "last_login" datetime NULL, "is_superuser" bool NOT NULL, "is_staff" bool NOT NULL, "is_active" bool NOT NULL, "date_joined" datetime NOT NULL, "first_name" varchar(150) NOT NULL, "last_name" varchar(150) NOT NULL, "email" varchar(254) NOT NULL UNIQUE, "username" varchar(150) NOT NULL UNIQUE, "avatar" varchar(100) NOT NULL);
 INSERT INTO users_user VALUES(1,'pbkdf2_sha256$600000$KH8SpeKOQKuV6pgQtnUF0C$No75I9dimw/9Et4pYSF7PD4BikgfLbpirRFCZaDeVBE=','2025-02-07 20:21:58.643669',1,1,1,'2025-02-07 20:20:58.732641','Sofia','Pogosian','sonyapgsn@gmail.com','sonjpog','');
-INSERT INTO users_user VALUES(2,'pbkdf2_sha256$600000$WM8jUO5B1A1V1RLaQTf3RM$cue/5l2aNTJl9GUOLU7snOM04WAPPHNe3w0Pu4sspFw=','2025-03-06 14:15:13.156136',0,0,1,'2025-03-06 14:14:51.313588','Вася','Иванов','vivanov@yandex.ru','vasya.ivanov','');
-INSERT INTO users_user VALUES(3,'pbkdf2_sha256$600000$Hpum2uricMquYunZysBImp$InZoktXUyoXJkbXq2DE+tfWHvP8KgumEGZwBYK61QVA=','2025-03-06 14:14:58.052723',0,0,1,'2025-03-06 14:14:53.105666','Андрей','Макаревский','second_user@email.org','second-user','');
-INSERT INTO users_user VALUES(4,'pbkdf2_sha256$600000$QuZYuslXtAums0L3QzYytc$LCylijc9v9NfFDxZStlVKczKcIxs8KdUldIHbKCAAN0=',NULL,0,0,1,'2025-03-06 14:14:54.516305','Гордон','Рамзиков','third-user@user.ru','third-user-username','');
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES('django_migrations',29);
 INSERT INTO sqlite_sequence VALUES('django_content_type',15);
