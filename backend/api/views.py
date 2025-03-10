@@ -107,7 +107,7 @@ class CustomUserViewSet(UserViewSet):
 
             return Response(
                 {'detail': 'Вы не подписаны на данного пользователя!'},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_404_NOT_FOUND
             )
 
     @action(
@@ -198,9 +198,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def add_to_favorite(self, request, pk):
         user = request.user
-        recipe = get_object_or_404(Recipe, pk=pk)
 
         if request.method == 'POST':
+            recipe = get_object_or_404(Recipe, pk=pk)
+
             if Favorite.objects.filter(recipe=recipe, user=user).exists():
                 return Response(
                     {
@@ -213,23 +214,23 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 )
 
             serializer = FavoriteSerializer(
-                data={'recipe': recipe, 'user': user}
+                data={'recipe': recipe.id, 'user': user.id}
             )
             serializer.is_valid(raise_exception=True)
             serializer.save(recipe=recipe, user=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        elif self.request.method == 'DELETE':
-            deleted_objects_number, _ = Favorite.objects.filter(
-                recipe=recipe, user=user
-            ).delete()
-            if deleted_objects_number:
-                return Response(status=status.HTTP_204_NO_CONTENT)
+        deleted_objects_number, _ = Favorite.objects.filter(
+            recipe_id=pk, user=user
+        ).delete()
 
-            return Response(
-                {'detail': 'Такого рецепта нет в избранных !'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        if deleted_objects_number:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(
+            {'detail': 'Такого рецепта нет в избранных!'},
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
     @action(
         detail=True,
@@ -269,7 +270,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         return Response(
             {'detail': 'Данного рецепта нет в списке покупок!'},
-            status=status.HTTP_400_BAD_REQUEST,
+            status=status.HTTP_404_NOT_FOUND,
         )
 
     @staticmethod

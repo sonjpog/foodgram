@@ -16,8 +16,8 @@ class MyUserAdmin(UserAdmin):
         'is_active',
         'avatar'
     )
-    search_fields = ('email', 'first_name', 'last_name')
-    list_filter = ('is_staff', 'is_active')
+    list_display_links = ('email',)
+    search_fields = ('username', 'email', 'first_name', 'last_name')
     ordering = ('email',)
     readonly_fields = ('date_joined', 'last_login')
 
@@ -27,5 +27,13 @@ class SubscriptionAdmin(admin.ModelAdmin):
     """Подписки пользователя."""
 
     list_display = ('user', 'subscribed_user')
+    list_display_links = ('user', 'subscribed_user')
     list_filter = ('user',)
     search_fields = ('user__email', 'subscribed_user__email')
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .select_related('user', 'subscribed_user')
+        )

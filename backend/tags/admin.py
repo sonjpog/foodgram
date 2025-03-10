@@ -9,7 +9,7 @@ class TagAdmin(admin.ModelAdmin):
     """Настройки отображения и управления тегами в админ-панели."""
 
     list_display = ('id', 'name', 'slug')
+    list_display_links = ('name', 'slug')
     search_fields = ('name', 'slug')
-    list_filter = ('name',)
     ordering = ('id',)
     prepopulated_fields = {'slug': ('name',)}
