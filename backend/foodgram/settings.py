@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'admin_auto_filters',
     'django_filters',
     'djoser',
+    'corsheaders',
     'api',
     'users',
     'tags',
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -149,6 +151,14 @@ REST_FRAMEWORK = {
 
 CSRF_TRUSTED_ORIGINS = [
     'https://sonyapgsn.ru',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000'
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'https://sonyapgsn.ru',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000'
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
