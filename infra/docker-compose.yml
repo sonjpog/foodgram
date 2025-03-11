@@ -44,3 +44,4 @@ services:
     restart: always
     depends_on:
       - frontend
+      - backend
