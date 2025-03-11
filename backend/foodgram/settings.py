@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     'admin_auto_filters',
     'django_filters',
     'djoser',
-    'corsheaders',
     'api',
     'users',
     'tags',
@@ -36,7 +35,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
