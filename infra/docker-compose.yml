@@ -32,7 +32,7 @@ services:
       - backend
 
   nginx:
-    image: nginx:1.19.6
+    image: nginx:1.22.1
     ports:
       - 8080:80
     volumes:
