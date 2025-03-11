@@ -150,9 +150,7 @@ REST_FRAMEWORK = {
 }
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://89.169.168.95',
-    'https://sonyapgsn.ru',
-    'http://localhost:8000',
+    'https://sonyapgsn.ru'
 ]
 
 CORS_ALLOWED_ORIGINS = [
