@@ -149,16 +149,16 @@ REST_FRAMEWORK = {
     ],
 }
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://sonyapgsn.ru',
-    'http://sonyapgsn.ru',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000'
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://sonyapgsn.ru',
+#     'http://sonyapgsn.ru',
+#     'http://localhost:8000',
+#     'http://127.0.0.1:8000'
+# ]
 
-CORS_ALLOWED_ORIGINS = [
-    'https://sonyapgsn.ru',
-    'http://sonyapgsn.ru',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000'
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'https://sonyapgsn.ru',
+#     'http://sonyapgsn.ru',
+#     'http://localhost:8000',
+#     'http://127.0.0.1:8000'
+# ]
